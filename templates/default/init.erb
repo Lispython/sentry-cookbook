@@ -1,0 +1,87 @@
+#!/bin/bash
+
+
+
+PROJECT_NAME="sentry"
+
+PIDFILE="<%= node['sentry']['init.d']['pidfile'] %>"
+
+USER_GROUP="<%= node['sentry']['user'] %>:<%= node['sentry']['group'] %>"
+
+EXEC="<%= node["sentry"]["spawner"] %>"
+EXEC_ARGS=""
+
+usage(){
+    echo "$0 {start | stop | restart | status}"
+	echo $EXEC
+    exit 1
+}
+
+
+start(){
+    echo "Starting: $PROJECT_NAME"
+    touch $PIDFILE
+    chown $USER_GROUP $PIDFILE
+    if start-stop-daemon --start --quiet --umask 007 --pidfile $PIDFILE --chuid $USER_GROUP --exec $EXEC -- $EXEC_ARGS
+    then
+        echo "$PROJECT_NAME started"
+    else
+        echo "Start failed"
+    fi
+}
+
+
+stop(){
+	echo "Stopping: $PROJECT_NAME"
+    if [ -f $PIDFILE ]
+    then
+        echo "$PIDFILE exists, process is already running or crashed"
+		PID=$(cat $PIDFILE)
+		if start-stop-daemon --stop --retry 10 --quiet --oknodo --pidfile $PIDFILE --exec $EXEC
+		then
+			echo "$PROJECT_NAME stoped"
+		else
+			echo "Stop failed"
+		fi
+        while [ -x /proc/${PIDFILE} ]
+        do
+            echo "Waiting for  to shutdown ..."
+            sleep 1
+        done
+
+        kill -9 `ps -eo pid,args | grep "sentry" | cut -c1-6`
+   	rm -f $PIDFILE
+	rm -f $SOCKFILE
+    else
+        echo "$PROJECT_NAME is not running ..."
+    fi
+}
+
+restart(){
+	echo "Restarting: $PROJECT_NAME"
+	${0} stop
+	${0} start
+}
+
+status(){
+	echo "Status: $PROJECT_NAME"
+    if [ -f $PIDFILE ]
+    then
+        echo "$PIDFILE exists, process is already running or crashed\n"
+    else
+        echo "$PROJECT_NAME is not running ..."
+    fi
+}
+
+case $1 in
+    "start") start;;
+
+    "stop") stop;;
+
+    "restart") restart;;
+
+    "status") status;;
+
+    *) usage;;
+
+esac
