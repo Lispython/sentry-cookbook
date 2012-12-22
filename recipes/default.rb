@@ -18,10 +18,11 @@ user node["sentry"]["user"] do
   comment "sentry service user"
   gid node["sentry"]["group"]
   system true
-  shell "/bin/sh"
+  shell "/bin/bash"
   action :create
   not_if "grep #{node['sentry']['user']} /etc/passwd"
 end
+
 
 directory node["sentry"]["virtualenv"] do
   owner node["sentry"]["user"]
@@ -80,23 +81,35 @@ bash "upgrade sentry" do
   user node["sentry"]["user"]
   group node["sentry"]["group"]
   code <<-EOH
-  #{node['sentry']['virtualenv']}/bin/python #{node['sentry']['virtualenv']}/bin/sentry --config=#{node['sentry']['config']} upgrade --noinput
+  . #{node['sentry']['virtualenv']}/bin/activate &&
+  #{node['sentry']['virtualenv']}/bin/python #{node['sentry']['virtualenv']}/bin/sentry --config=#{node['sentry']['config']} upgrade --noinput &&
+  deactivate
   EOH
 end
 
 
 # Create superusers
-# sentry --config=/etc/sentry.conf.py createsuperuser
-node["sentry"]["superusers"].each do |item|
-  Chef::Log.warn("Make item #{item[:username]}:#{item[:password]}")
+template node["sentry"]["superuser_creator_script"] do
+  owner node["sentry"]["user"]
+  group node["sentry"]["group"]
+  source "superuser_creator.py.erb"
+end
 
-  bash "create superuser #{item[:username]}" do
-    user node["sentry"]["user"]
-    group node["sentry"]["group"]
-    code <<-EOH
-    echo "#{item["password"]}" | #{node['sentry']['virtualenv']}/bin/python #{node['sentry']['virtualenv']}/bin/sentry --config=#{node['sentry']['config']} createsuperuser --username #{item["username"]} --email #{item["email"]} --noinput
-    EOH
-  end
+# sentry --config=/etc/sentry.conf.py createsuperuser
+
+bash "create sentry superusers" do
+  user node["sentry"]["user"]
+  group node["sentry"]["group"]
+
+  code <<-EOH
+  . #{node['sentry']['virtualenv']}/bin/activate &&
+  #{node['sentry']['virtualenv']}/bin/python #{node['sentry']['superuser_creator_script']} &&
+  deactivate
+  EOH
+end
+
+file node['sentry']['superuser_creator_script'] do
+  action :delete
 end
 
 template node["sentry"]["spawner"] do
@@ -107,24 +120,26 @@ template node["sentry"]["spawner"] do
 end
 
 if node['sentry']['start']
-  bash "start sentry server" do
-    user node["sentry"]["user"]
-    group node["sentry"]["group"]
-    code <<-EOH
-    #{node['sentry']['virtualenv']}/bin/python #{node['sentry']['virtualenv']}/bin/sentry --config=#{node['sentry']['config']} start &
-    EOH
-  end
-  # Start webservice
-  # sentry --config=/etc/sentry.conf.py start
-  # service "sentry" do
-  #   supports :status => true, :restart => true, :reload => true
-  # end
-
-  # template node["sentry"]["init.d"]["script"] do
-  #   mode 0700
-  #   source "init.erb"
+  # bash "start sentry server" do
   #   user node["sentry"]["user"]
   #   group node["sentry"]["group"]
-  #   notifies :start, "service[sentry]"
+  #   code <<-EOH
+  #   . #{node['sentry']['virtualenv']}/bin/activate &&
+  #   #{node['sentry']['virtualenv']}/bin/python #{node['sentry']['virtualenv']}/bin/sentry --config=#{node['sentry']['config']} start &
+  #   deactivate
+  #   EOH
   # end
+  # Start webservice
+  # sentry --config=/etc/sentry.conf.py start
+  service "sentry" do
+    supports :status => true, :restart => true, :reload => true
+  end
+
+  template node["sentry"]["init.d"]["script"] do
+    mode 0700
+    source "init.erb"
+    user node["sentry"]["user"]
+    group node["sentry"]["group"]
+    notifies :start, "service[sentry]"
+  end
 end

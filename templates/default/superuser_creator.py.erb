@@ -1,0 +1,28 @@
+#!<%= node['sentry']['virtualenv'] %>/bin/python
+# -*- coding: utf-8 -*-
+
+from django.core.management import setup_environ
+from logan.runner import configure_app
+
+configure_app(config_path="<%= node['sentry']['config'] %>",
+              project="sentry", default_settings="sentry.conf.server")
+
+from django.contrib.auth.models import User
+
+
+users = [
+    <% for  @user in node[:sentry][:superusers] %>
+    ("<%= @user['username'] %>", "<%= @user['email'] %>", "<%= @user['password'] %>"),
+    <% end %>
+    ]
+
+for user in users:
+    user_instance, created = User.objects.get_or_create(
+        username=user[0],
+        email=user[1],
+        defaults={"is_superuser": True,
+                  "is_staff": True})
+    if created:
+        user_instance.set_password(user[2])
+
+    user_instance.save()

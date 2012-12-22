@@ -15,6 +15,7 @@ default["sentry"]["3_party_plugins"] = {}
 
 default["sentry"]["config"] = "/etc/sentry.conf.py"
 
+default["sentry"]["superuser_creator_script"] = "/tmp/superuser_creator.py"
 default["sentry"]["superusers"] = []
 
 # Database settings
