@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+#
+# Cookbook Name:: sentry cookbook
+#
+# :copyright: (c) 2012 by Alexandr Lispython (alex@obout.ru).
+# :license: BSD, see LICENSE for more details.
+# :github: http://github.com/Lispython/sentry-cookbook
+#
 
 default["sentry"]["include_settings"] = nil
 default["sentry"]["version"]="5.0.21"

@@ -22,4 +22,25 @@ If you want to user sentry include recipe[sentry] to you runlist.
 
 Replace you own `node['sentry']['key']` random key.
 
+For create new superusers you need overrider `node['sentry']['superusers']` attribute:
 
+    "superusers" => [{
+                     "username" => "alex",
+                     "password" => "tmppassword",
+                     "email" => "alex@obout.ru"}]
+
+We recommend change temporary passwords after from web interface.
+
+To configure database override `node['sentry']['databases']['default']` keys:
+
+     "databases" => {
+        "default" => {
+          "NAME" => "/var/www/sentry/sentry.db"
+        },
+     }
+
+
+See also
+========
+
+- [Exceptional error aggregation](https://github.com/getsentry/)

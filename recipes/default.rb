@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-# Cookbook Name:: sentry
+# Cookbook Name:: sentry cookbook
 # Recipe:: default
 #
-# Copyright 2012, Lispython
-#
-# All rights reserved - Do Not Redistribute
+# :copyright: (c) 2012 by Alexandr Lispython (alex@obout.ru).
+# :license: BSD, see LICENSE for more details.
+# :github: http://github.com/Lispython/sentry-cookbook
 #
 
 group node["sentry"]["group"] do
@@ -129,6 +129,8 @@ if node['sentry']['start']
   #   deactivate
   #   EOH
   # end
+
+
   # Start webservice
   # sentry --config=/etc/sentry.conf.py start
   service "sentry" do
