@@ -142,6 +142,6 @@ if node['sentry']['start']
     source "init.erb"
     user node["sentry"]["user"]
     group node["sentry"]["group"]
-    notifies :start, "service[sentry]"
+    notifies :restart, "service[sentry]"
   end
 end
