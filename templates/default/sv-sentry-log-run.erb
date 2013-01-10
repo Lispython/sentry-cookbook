@@ -1,0 +1,6 @@
+#!/bin/sh
+
+
+LOG_FOLDER=<%= @options[:log_folder] %>
+mkdir -p $LOG_FOLDER
+exec svlogd -tt $LOG_FOLDER
