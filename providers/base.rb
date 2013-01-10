@@ -3,7 +3,7 @@ action :init do
 
   config = new_resource.config || node["sentry"]["config"]
 
-  spawner = "#{ new_resource.virtualenv }/bin/#{ new_resource.name }"
+  spawner = "#{ new_resource.virtualenv }/bin/#{ new_resource.name }-spawner"
   init_script = "/etc/init.d/#{ new_resource.name }"
 
   template spawner do
