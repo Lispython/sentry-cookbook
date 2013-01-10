@@ -1,17 +1,17 @@
-#!<%= node['sentry']['virtualenv'] %>/bin/python
+#!<%= @virtualenv %>/bin/python
 # -*- coding: utf-8 -*-
 
 from django.core.management import setup_environ
 from logan.runner import configure_app
 
-configure_app(config_path="<%= node['sentry']['config'] %>",
+configure_app(config_path="<%= @config %>",
               project="sentry", default_settings="sentry.conf.server")
 
 from django.contrib.auth.models import User
 
 
 users = [
-    <% for  @user in node[:sentry][:superusers] %>
+    <% for  @user in @superusers %>
     ("<%= @user['username'] %>", "<%= @user['email'] %>", "<%= @user['password'] %>"),
     <% end %>
     ]

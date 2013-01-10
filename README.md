@@ -40,6 +40,32 @@ To configure database override `node['sentry']['databases']['default']` keys:
      }
 
 
+Definitions
+===========
+
+You can create many sentry instances or instance with node specified attributes via definition usage:
+
+    sentry_instance "sentry-1" do
+        user "sentry"
+        group "sentry"
+	variables {}
+    end
+
+
+Recipes
+=======
+
+default
+-------
+
+Base recipe to configure sentry user and group
+
+instance
+--------
+
+Recipe to install simple sentry instance.
+
+
 See also
 ========
 

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-. <%= node['sentry']['virtualenv'] %>
+. <%= @virtualenv %>
 
-<%= node['sentry']['virtualenv'] %>/bin/python <%= node['sentry']['virtualenv'] %>/bin/sentry --config=<%= node['sentry']['config'] %> start &
+<%= @virtualenv %>/bin/python <%= @virtualenv %>/bin/sentry --config=<%= @config %> start &
