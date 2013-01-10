@@ -1,3 +1,4 @@
+name             "sentry"
 maintainer       "Alexandr Lispython"
 maintainer_email "alex@obout.ru"
 license          "BSD, see LICENSE for more details."
