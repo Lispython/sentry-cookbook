@@ -18,12 +18,17 @@ sentry_conf "sentry" do
   settings node["sentry"]["settings"]
 end
 
+node["sentry"]["servers"].each() do |server|
 
-# Running sentry instance
-sentry_instance "sentry-1" do
-  virtualenv node["sentry"]["virtualenv"]
-  user node["sentry"]["user"]
-  group node["sentry"]["group"]
-  pidfile "/var/run/sentry-1.pid"
-  config node["sentry"]["config"]
+  # Running sentry instance
+  sentry_instance "sentry-#{server["port"]}" do
+    virtualenv node["sentry"]["virtualenv"]
+    user node["sentry"]["user"]
+    group node["sentry"]["group"]
+    pidfile "/var/run/sentry-#{server["port"]}.pid"
+    config node["sentry"]["config"]
+    host server["host"]
+    port server["port"]
+    workers server["workers"]
+  end
 end

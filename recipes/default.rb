@@ -8,17 +8,3 @@
 # :github: http://github.com/Lispython/sentry-cookbook
 #
 
-group node["sentry"]["group"] do
-  action :create
-  system true
-  not_if "grep #{node['sentry']['group']} /etc/group"
-end
-
-user node["sentry"]["user"] do
-  comment "sentry service user"
-  gid node["sentry"]["group"]
-  system true
-  shell "/bin/bash"
-  action :create
-  not_if "grep #{node['sentry']['user']} /etc/passwd"
-end

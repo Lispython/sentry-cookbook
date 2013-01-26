@@ -1,0 +1,29 @@
+upstream backends  {
+  <% node["sentry"]["servers"].each do |server| %>
+  server <%= server["host"] %>:<%= server["port"] %> fail_timeout=60s;
+  <% end %>
+}
+
+
+server {
+  listen <%= node["sentry"]["nginx"]["ip_address"] %>:<%= node["sentry"]["nginx"]["port"] %>;
+
+  server_name <%= node["sentry"]["nginx"]["domain"] %>;
+
+  error_log /var/log/nginx/sentry.error.log;
+  access_log /var/log/nginx/sentry.access.log;
+
+  gzip             on;
+  gzip_min_length  1000;
+  gzip_proxied     expired no-cache no-store private auth;
+
+  location / {
+     proxy_pass  http://backends;
+     proxy_redirect     off;
+
+     proxy_set_header   Host              $host;
+     proxy_set_header   X-Real-IP         $remote_addr;
+     proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+     proxy_set_header   X-Forwarded-Proto $scheme;
+  }
+}

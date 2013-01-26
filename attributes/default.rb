@@ -15,8 +15,9 @@ default["sentry"]["include_settings"] = nil
 
 default["sentry"]["user"] = "sentry"
 default["sentry"]["group"] = "sentry"
-
+#default["sentry"]["userhome"] = "/home/#{node["sentry"]["user"]}"
 default["sentry"]["virtualenv"] = "/var/www/sentry"
+default["sentry"]["userhome"] = node["sentry"]["virtualenv"]
 default["sentry"]["config"] = "/etc/sentry.conf.py"
 default["sentry"]["superusers"] = []
 
@@ -35,7 +36,7 @@ default["sentry"]["settings"]["third_party_plugins"] = {}
 default["sentry"]["settings"]["databases"] = {
   "default" => {
     "ENGINE" => "django.db.backends.sqlite3",
-    "NAME" => "sentry",
+    "NAME" => "#{node["sentry"]["virtualenv"]}/default_sentry_db",
     "USER" => "sentry",
     "PASSWORD" => "",
     "HOST" => "",
@@ -107,3 +108,16 @@ default["sentry"]["init.d"] = {
   "pidfile" => "/var/run/sentry.pid",
   "script" => "/etc/init.d/sentry"
 }
+
+
+default["sentry"]["nginx"] = {
+  "domain" => "localhost",
+  "ip_address" => "0.0.0.0",
+  "port" => 80
+}
+
+default["sentry"]["servers"] = [{
+                                  "name" => "sentry-1",
+                                  "host" => "0.0.0.0",
+                                  "port" => 9000
+                                }]

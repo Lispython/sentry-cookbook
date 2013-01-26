@@ -16,13 +16,16 @@ end
 
 define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
 :virtualenv_dir => nil,
-:user => "sentry", :group => "group",
+:user => "sentry",
+:group => "sentry",
 :config => nil,
 :superusers => [],
 :variables => {},
 :settings => {} do
 
   Chef::Log.info("Making sentry config for: #{params[:name]}")
+  include_recipe "python::virtualenv"
+  include_recipe "python::pip"
   include_recipe "sentry::default"
 
   virtualenv_dir = params[:virtualenv_dir] or node["sentry"]["virtulenv"]
@@ -33,6 +36,7 @@ define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
   config = params[:config] || node["sentry"]["config"]
   settings_variables["config"] = config
 
+  Chef::Log.info("Making directory for virtualenv: #{virtualenv_dir}")
   # Making application virtualenv directory
   directory virtualenv_dir do
     owner params[:user]
@@ -42,6 +46,7 @@ define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
     action :create
   end
 
+  Chef::Log.info("Making virtualenv: #{virtualenv_dir}")
   # Creating virtualenv structure
   python_virtualenv virtualenv_dir do
     owner params[:user]
@@ -49,6 +54,7 @@ define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
     action :create
   end
 
+  Chef::Log.info("Making config #{config}")
   # Creating sentry config
   template config do
     owner params[:user]

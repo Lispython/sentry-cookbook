@@ -8,15 +8,14 @@ action :init do
   runit_service sentry_new_resource.name do
     template_name sentry_new_resource.name
     run_restart false
-    options :user => sentry_new_resource.user,
-    :group => sentry_new_resource.group,
-    :service_name => sentry_new_resource.name,
-    :config => sentry_new_resource.config,
-    :pidfile => sentry_new_resource.pidfile,
-    :port => sentry_new_resource.port,
-    :host => sentry_new_resource.host,
-    :virtualenv => sentry_new_resource.virtualenv
-    :log_folder => log_folder
+    options(:user => sentry_new_resource.user,
+            :group => sentry_new_resource.group,
+            :service_name => sentry_new_resource.name,
+            :config => sentry_new_resource.config,
+            :pidfile => sentry_new_resource.pidfile,
+            :port => sentry_new_resource.port,
+            :host => sentry_new_resource.host,
+            :virtualenv => sentry_new_resource.virtualenv,
+            :log_folder => log_folder)
   end
-
 end

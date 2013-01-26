@@ -11,9 +11,11 @@ action :init do
     owner new_resource.user
     group new_resource.group
     source "spawner.erb"
-    variables({
-                :virtualenv => new_resource.virtualenv,
-                :config => new_resource.config})
+    variables(:virtualenv => new_resource.virtualenv,
+              :config => new_resource.config,
+              :port => new_resource.port,
+              :host => new_resource.host,
+              :workers => new_resource.workers || node["sentry"]["web"]["options"]["workers"])
   end
 
   # Start webservice
