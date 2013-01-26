@@ -2,13 +2,13 @@
 
 
 
-PROJECT_NAME="sentry"
+PROJECT_NAME="<%= @name %>"
 
-PIDFILE="<%= node['sentry']['init.d']['pidfile'] %>"
+PIDFILE="<%= @pidfile %>"
 
-USER_GROUP="<%= node['sentry']['user'] %>:<%= node['sentry']['group'] %>"
+USER_GROUP="<%= @user %>:<%= @group %>"
 
-EXEC="<%= node["sentry"]["spawner"] %>"
+EXEC="<%= @spawner %>"
 EXEC_ARGS=""
 
 usage(){
@@ -64,7 +64,7 @@ restart(){
 }
 
 status(){
-	echo "Status: $PROJECT_NAME"
+    echo "Status: $PROJECT_NAME"
     if [ -f $PIDFILE ]
     then
         echo "$PIDFILE exists, process is already running or crashed\n"

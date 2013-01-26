@@ -1,5 +1,7 @@
 #!/bin/bash
 
-. <%= node['sentry']['virtualenv'] %>
+set -e
 
-<%= node['sentry']['virtualenv'] %>/bin/python <%= node['sentry']['virtualenv'] %>/bin/sentry --config=<%= node['sentry']['config'] %> start &
+. <%= @virtualenv %>/bin/activate
+
+<%= @virtualenv %>/bin/python <%= @virtualenv %>/bin/sentry --config=<%= @config %> <% if @gunicorn %>run_gunicorn -b <%= @host %>:<%= @port %> -w <%= @workers %> <% else %> start -w <%= @workers %> <% end %> &
