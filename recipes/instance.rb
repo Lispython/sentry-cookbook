@@ -9,6 +9,7 @@
 #
 
 include_recipe "sentry::default"
+include_recipe "sentry::user"
 
 # Create sentry instance virtualenv and config
 sentry_conf "sentry" do

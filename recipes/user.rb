@@ -17,7 +17,7 @@ end
 user node["sentry"]["user"] do
 
   if node["sentry"]["userhome"]
-    home ["sentry"]["userhome"]
+    home node["sentry"]["userhome"]
   end
 
   comment "sentry service user"
