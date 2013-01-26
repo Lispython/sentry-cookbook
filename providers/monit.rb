@@ -1,5 +1,5 @@
 action :init do
-  Chef::Log.info("Make instance via base #{new_resource.name}")
+  Chef::Log.info("Make instance via monit #{new_resource.name}")
 
   config = new_resource.config || node["sentry"]["config"]
 
@@ -19,12 +19,6 @@ action :init do
               :gunicorn => new_resource.gunicorn || node["sentry"]["gunicorn"])
   end
 
-  # Start webservice
-  # sentry --config=/etc/sentry.conf.py start
-  service new_resource.name do
-    supports :status => true, :restart => true, :reload => true
-  end
-
   template init_script do
       mode 0700
       source "init.erb"
@@ -33,6 +27,24 @@ action :init do
                 :pidfile => new_resource.pidfile,
                 :spawner => spawner,
                 :name => new_resource.name)
-      notifies :restart, "service[#{new_resource.name}]"
-    end
+  end
+
+  service new_resource.name do
+    supports :start => true, :restart => true, :stop => true
+    provider Chef::Provider::MonitMonit
+    action :enable
+  end
+
+  monit_conf "#{new_resource.name}" do
+    template "sentry-monit.erb"
+    config(:start_command => "#{init_script} start",
+           :stop_command => "#{init_script} stop",
+           :host => new_resource.host,
+           :port => new_resource.port,
+           :name => new_resource.name,
+           :pidfile => new_resource.pidfile)
+    cookbook "sentry"
+    notifies :restart, resources(:service => new_resource.name), :delayed
+  end
+
 end

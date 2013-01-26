@@ -108,7 +108,7 @@ default["sentry"]["init.d"] = {
   "pidfile" => "/var/run/sentry.pid",
   "script" => "/etc/init.d/sentry"
 }
-
+default["sentry"]["gunicorn"] = true
 
 default["sentry"]["nginx"] = {
   "domain" => "localhost",
@@ -116,6 +116,7 @@ default["sentry"]["nginx"] = {
   "port" => 80
 }
 
+default["sentry"]["supervisor"] = "sentry_base"
 default["sentry"]["servers"] = [{
                                   "name" => "sentry-1",
                                   "host" => "0.0.0.0",

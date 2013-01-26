@@ -27,13 +27,13 @@ SENTRY_PUBLIC = <%= @public %>
 
 SENTRY_KEY = "<%= @private_key %>"
 
-SENTRY_WEB_HOST = "<%= @web['host'] %>"
-SENTRY_WEB_PORT = "<%= @web['port'] %>"
-SENTRY_WEB_OPTIONS = {
-   <% for @name, @value in @web['options'] %>
-   '<%= @name %>': '<%= @value %>',
-   <% end %>
-}
+# SENTRY_WEB_HOST = "<%= @web['host'] %>"
+# SENTRY_WEB_PORT = "<%= @web['port'] %>"
+# SENTRY_WEB_OPTIONS = {
+#   <% for @name, @value in @web['options'] %>
+#   '<%= @name %>': '<%= @value %>',
+#   <% end %>
+#}
 
 
 # Mail server configuration

@@ -31,5 +31,7 @@ node["sentry"]["servers"].each() do |server|
     host server["host"]
     port server["port"]
     workers server["workers"]
+    gunicorn server["gunicorn"]
+    provider server["supervisor"] || node["sentry"]["supervisor"]
   end
 end

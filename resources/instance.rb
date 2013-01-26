@@ -21,6 +21,7 @@ attribute :variables, :kind_of => Hash
 attribute :config, :kind_of => String
 attribute :host, :kind_of => String, :default => "0.0.0.0"
 attribute :port, :kind_of => Integer, :default => 9000
+attribute :gunicorn, :kind_of => [FalseClass, TrueClass], :default => true
 attribute :workers, :kind_of => Integer, :default => 3
 
 
