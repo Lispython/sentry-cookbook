@@ -110,10 +110,11 @@ define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
   template node["sentry"]["superuser_creator_script"] do
     owner params[:user]
     group params[:group]
+
     source "superuser_creator.py.erb"
     variables(:config => config,
-              :superusers => params[:superusers],
-              :virtualenv => virtualenv_dir)
+              :superusers => params[:superusers] || node["sentry"]["superusers"],
+              :virtualenv => virtualenv_dir,)
   end
 
   # # sentry --config=/etc/sentry.conf.py createsuperuser
@@ -128,8 +129,8 @@ define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
   EOH
   end
 
-  file node['sentry']['superuser_creator_script'] do
-    action :delete
-  end
+  # file node['sentry']['superuser_creator_script'] do
+  #   action :delete
+  # end
 
 end

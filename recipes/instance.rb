@@ -17,6 +17,7 @@ sentry_conf "sentry" do
   user node["sentry"]["user"]
   group node["sentry"]["group"]
   settings node["sentry"]["settings"]
+  superusers node["sentry"]["superusers"]
 end
 
 node["sentry"]["servers"].each() do |server|
