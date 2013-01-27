@@ -4,4 +4,4 @@ set -e
 
 . <%= @virtualenv %>/bin/activate
 
-<%= @virtualenv %>/bin/python <%= @virtualenv %>/bin/sentry --config=<%= @config %> <% if @gunicorn %>run_gunicorn -b <%= @host %>:<%= @port %> -w <%= @workers %> <% else %> start -w <%= @workers %> <% end %> &
+<%= @virtualenv %>/bin/python <%= @virtualenv %>/bin/sentry --config=<%= @config %> <% if @gunicorn %>run_gunicorn -b <%= @host %>:<%= @port %> -w <%= @workers %> <% else %> start -w <%= @workers %> <% end %> 2>&1

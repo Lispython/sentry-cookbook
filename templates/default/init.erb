@@ -22,7 +22,7 @@ start(){
     echo "Starting: $PROJECT_NAME"
     touch $PIDFILE
     chown $USER_GROUP $PIDFILE
-    if start-stop-daemon --start --quiet --umask 007 --pidfile $PIDFILE --chuid $USER_GROUP --exec $EXEC -- $EXEC_ARGS
+    if start-stop-daemon --start --quiet --make-pidfile --umask 007 --pidfile $PIDFILE --chuid $USER_GROUP --exec $EXEC -- $EXEC_ARGS
     then
         echo "$PROJECT_NAME started"
     else
