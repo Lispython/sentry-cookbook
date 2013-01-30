@@ -14,14 +14,16 @@ class Chef::Recipe
   include Chef::Mixin::DeepMerge
 end
 
-define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
-:virtualenv_dir => nil,
-:user => "sentry",
-:group => "sentry",
-:config => nil,
-:superusers => [],
-:variables => {},
-:settings => {} do
+define :sentry_conf,
+       :name => nil,
+       :template => "sentry.conf.erb",
+       :virtualenv_dir => nil,
+       :user => "sentry",
+       :group => "sentry",
+       :config => nil,
+       :superusers => [],
+       :variables => {},
+       :settings => {} do
 
   Chef::Log.info("Making sentry config for: #{params[:name]}")
   include_recipe "python::virtualenv"
@@ -30,7 +32,7 @@ define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
 
   virtualenv_dir = params[:virtualenv_dir] or node["sentry"]["virtulenv"]
 
-  #settings_variables = Chef::Mixin::DeepMerge.deep_merge!(node[:sentry][:settings], params[:settings].to_hash)
+  #settings_variables = Chef::Mixin::DeepMerge.deep_merge!(node[:sentry][:settings].to_hash, params[:settings])
 
   settings_variables = params[:settings]
   config = params[:config] || node["sentry"]["config"]
@@ -74,6 +76,31 @@ define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
     action :install
   end
 
+  # Install database drivers
+  node['sentry']['settings']['databases'].each do |key, db_options|
+    driver_name = nil
+    if db_options['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
+      driver_name = 'psycopg2'
+    elsif db_options['ENGINE'] == 'django.db.backends.mysql'
+      driver_name = 'MySQLdb'
+    elsif db_options['ENGINE'] == 'django.db.backends.oracle'
+      driver_name = 'cx_Oracle'
+    else
+      raise "You need specify database ENGINE"
+    end
+
+    if driver_name
+      Chef::Log.info("Install #{driver_name} driver")
+      python_pip driver_name do
+        user params[:user]
+        group params[:group]
+        provider Chef::Provider::PythonPip
+        virtualenv virtualenv_dir
+        action :install
+      end
+    end
+  end
+
   # # Install third party plugins
   node["sentry"]["settings"]["third_party_plugins"].each do |item|
     python_pip item["pypi_name"] do
@@ -87,6 +114,8 @@ define :sentry_conf, :name => nil, :template => "sentry.conf.erb",
       action :install
     end
   end
+
+
 
   bash "chown virtualenv" do
     code <<-EOH

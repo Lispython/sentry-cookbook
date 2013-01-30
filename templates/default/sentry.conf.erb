@@ -7,10 +7,10 @@
 <% end %>
 
 DATABASES = {
-  <% for @name, @dsettings in @databases %>
-  "<%= @name %>": {
-       <% for @key, @value in @dsettings %>
-       "<%= @key.upcase %>": "<%= @value %>",
+  <% for name, dsettings in @databases %>
+  "<%= name %>": {
+       <% for key, value in dsettings %>
+       "<%= key.upcase %>": <% if value.is_a?(Integer) %><%= value %><% else %>"<%= value %>"<% end %>,
        <% end %>
   },
   <% end %>
@@ -50,28 +50,26 @@ EMAIL_PORT = <%= @email['port'] %>
 EMAIL_USE_TLS = <%= @email['use_tls'] %>
 
 
-<% for @network, @params in @social %>
-   <% for @param, @value in @params %>
-<%= @network.upcase %>_<%= @param.upcase %> = '<%= @value %>'
+<% for network, params in @social %>
+   <% for param, value in params %>
+<%= network.upcase %>_<%= param.upcase %> = <% if value.is_a?(Integer) %><%= value %><% else %>"<%= value %>"<% end %>
    <% end %>
-
 <% end %>
-
 
 SOCIAL_AUTH_CREATE_USERS = <%= @social_auth_create_users %>
 
 # Custom settings
-<% for @key, @value in @custom_settings %>
-<%= @key.upcase %> = "<%= @value %>"
+<% for key, value in @custom_settings %>
+<%= key.upcase %> = <% if value.is_a?(Integer) %><%= value %><% else %>"<%= value %>"<% end %>
 <% end %>
 
 EXTRA_INSTALLED_APPS = [
-<% for @item in @plugins %>
-   '<%= @item %>',
+<% for item in @plugins %>
+   '<%= item %>',
 <% end %>
-<% for @item in @third_party_plugins %>
-   <% if @item['name'] %>
-   '<%= @item %>',
+<% for item in @third_party_plugins %>
+   <% if item['name'] %>
+   '<%= item %>',
    <% end %>
 <% end %>
 ]
