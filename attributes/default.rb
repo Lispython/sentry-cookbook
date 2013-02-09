@@ -8,7 +8,7 @@
 #
 
 # Global params
-default["sentry"]["version"] = "5.2.1"
+default["sentry"]["version"] = "5.4.1"
 default["sentry"]["superuser_creator_script"] = "/tmp/superuser_creator.py"
 
 default["sentry"]["include_settings"] = nil

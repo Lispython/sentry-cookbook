@@ -12,6 +12,8 @@ include_recipe "sentry::default"
 
 Chef::Log.info("Making nginx frontend for sentry service")
 
+nginx_site "sentry.conf"
+
 template "#{node[:nginx][:dir]}/sites-available/sentry.conf" do
   source 'nginx.conf.erb'
   owner user
@@ -26,5 +28,3 @@ template "#{node[:nginx][:dir]}/sites-available/sentry.conf" do
 
   notifies :reload, resources(:service => "nginx")
 end
-
-nginx_site "sentry.conf"

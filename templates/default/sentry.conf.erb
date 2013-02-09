@@ -47,7 +47,7 @@ EMAIL_HOST = "<%= @email['host'] %>"
 EMAIL_HOST_PASSWORD = "<%= @email['password'] %>"
 EMAIL_HOST_USER = "<%= @email['user'] %>"
 EMAIL_PORT = <%= @email['port'] %>
-EMAIL_USE_TLS = <%= @email['use_tls'] %>
+EMAIL_USE_TLS = <%= @email['use_tls'] || "False" %>
 
 
 <% for network, params in @social %>
