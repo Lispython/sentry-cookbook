@@ -43,7 +43,7 @@ default["sentry"]["settings"]["databases"] = {
     "PORT" => ""
   }}
 
-default["sentry"]["settings"]["public"] = 'True'
+default["sentry"]["settings"]["public"] = 'False'
 default["sentry"]["settings"]["prefix"] = "http://sentry.example.com"
 default["sentry"]["settings"]["private_key"] = "generate_you_own_key"
 
