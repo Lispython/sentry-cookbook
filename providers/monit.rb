@@ -32,7 +32,6 @@ action :init do
   service new_resource.name do
     supports :start => true, :restart => true, :stop => true
     provider Chef::Provider::MonitMonit
-    action :enable
   end
 
   monit_conf "#{new_resource.name}" do
