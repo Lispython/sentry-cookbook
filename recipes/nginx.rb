@@ -17,13 +17,6 @@ template "#{node[:nginx][:dir]}/sites-available/sentry.conf" do
   source 'nginx.conf.erb'
   owner user
   group user
-  variables(:domain => node["multiqa"]["domain"],
-            :project_name => node["multiqa"]["project_name"],
-            :site_name => node["multiqa"]["site_name"],
-            :media_root => node["multiqa"]["media_root"],
-            :static_root => node["multiqa"]["static_root"],
-            :server_ip => node["multiqa"]["server_ip"],
-            :current => node["multiqa"]["current"])
 
   notifies :reload, resources(:service => "nginx")
 end

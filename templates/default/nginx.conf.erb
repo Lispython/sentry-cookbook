@@ -1,4 +1,4 @@
-upstream backends  {
+upstream sentry_backends  {
   <% node["sentry"]["servers"].each do |server| %>
   server <%= server["host"] %>:<%= server["port"] %> fail_timeout=60s;
   <% end %>
@@ -18,7 +18,7 @@ server {
   gzip_proxied     expired no-cache no-store private auth;
 
   location / {
-     proxy_pass  http://backends;
+     proxy_pass  http://sentry_backends;
      proxy_redirect     off;
 
      proxy_set_header   Host              $host;
