@@ -23,6 +23,7 @@ attribute :host, :kind_of => String, :default => "0.0.0.0"
 attribute :port, :kind_of => Integer, :default => 9000
 attribute :gunicorn, :kind_of => [FalseClass, TrueClass], :default => true
 attribute :workers, :kind_of => Integer, :default => 3
+attribute :log_folder, :kind_of => String
 
 
 def initialize(*args)
