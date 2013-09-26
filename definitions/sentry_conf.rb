@@ -23,6 +23,7 @@ define :sentry_conf,
        :config => nil,
        :superusers => [],
        :variables => {},
+       :templates_cookbook => "sentry",
        :settings => {} do
 
   Chef::Log.info("Making sentry config for: #{params[:name]}")
@@ -64,6 +65,7 @@ define :sentry_conf,
     source params[:template]
     mode 0777
     variables(settings_variables.to_hash)
+    cookbook params[:templates_cookbook]
   end
 
   # Intstall sentry via pip
@@ -144,6 +146,7 @@ define :sentry_conf,
     variables(:config => config,
               :superusers => params[:superusers] || node["sentry"]["superusers"],
               :virtualenv => virtualenv_dir)
+    cookbook params[:templates_cookbook]
   end
 
   # # sentry --config=/etc/sentry.conf.py createsuperuser
