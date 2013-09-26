@@ -6,7 +6,7 @@ action :init do
   log_folder = sentry_new_resource.log_folder || "/var/log/runit/#{sentry_new_resource.name}/"
 
   runit_service sentry_new_resource.name do
-    template_name sentry_new_resource.name
+    template_name "sentry"
     run_restart false
     options(:user => sentry_new_resource.user,
             :group => sentry_new_resource.group,

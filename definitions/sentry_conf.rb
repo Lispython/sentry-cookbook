@@ -118,7 +118,6 @@ define :sentry_conf,
   end
 
 
-
   bash "chown virtualenv" do
     code <<-EOH
   chown -R #{params['user']}:#{params['group']} #{virtualenv_dir}
