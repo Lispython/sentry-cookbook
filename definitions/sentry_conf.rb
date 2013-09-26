@@ -140,7 +140,7 @@ define :sentry_conf,
     owner params[:user]
     group params[:group]
 
-    source "superuser_creator.py.erb"
+    source "sentry/superuser_creator.py.erb"
     variables(:config => config,
               :superusers => params[:superusers] || node["sentry"]["superusers"],
               :virtualenv => virtualenv_dir)
