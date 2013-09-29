@@ -7,4 +7,4 @@ CONFIG_FILE=<%= @options[:config] %>
 
 . <%= @options[:virtualenv] %>/bin/activate
 
-exec chpst -u $TARGET_USER sentry --config=$CONFIG_FILE run_gunicorn -b <%= @options[:host] %>:<%= @options[:port] %> -w <%= @options[:workers] %>  2>&1
+exec chpst -u $TARGET_USER sentry --config=$CONFIG_FILE run_gunicorn -b <%= @options[:host] %>:<%= @options[:port] %> <% if @options[:workers] %>-w <%= @options[:workers] %><% end %> 2>&1
