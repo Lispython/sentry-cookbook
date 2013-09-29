@@ -16,7 +16,7 @@ end
 
 define :sentry_conf,
        :name => nil,
-       :template => "sentry.conf.erb",
+       :template => "sentry/sentry.conf.erb",
        :virtualenv_dir => nil,
        :user => "sentry",
        :group => "sentry",
