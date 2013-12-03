@@ -35,9 +35,9 @@ define :sentry_conf,
 
   #settings_variables = Chef::Mixin::DeepMerge.deep_merge!(node[:sentry][:settings].to_hash, params[:settings])
 
-  settings_variables = params[:settings]
+  node.default["settings_variables"] = params[:settings]
   config = params[:config] || node["sentry"]["config"]
-  settings_variables["config"] = config
+  node.default["settings_variables"]["config"] = config
 
   Chef::Log.info("Making directory for virtualenv: #{virtualenv_dir}")
   # Making application virtualenv directory
@@ -64,7 +64,7 @@ define :sentry_conf,
     group params[:group]
     source params[:template]
     mode 0777
-    variables(settings_variables.to_hash)
+    variables(node["settings_variables"].to_hash)
     cookbook params[:templates_cookbook]
   end
 
