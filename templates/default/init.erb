@@ -39,7 +39,7 @@ stop(){
 		PID=$(cat $PIDFILE)
 		if start-stop-daemon --stop --retry 10 --quiet --oknodo --pidfile $PIDFILE --exec $EXEC
 		then
-			echo "$PROJECT_NAME stoped"
+			echo "$PROJECT_NAME stopped"
 		else
 			echo "Stop failed"
 		fi
