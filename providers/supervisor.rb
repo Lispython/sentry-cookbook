@@ -6,6 +6,6 @@ action :init do
     command "#{new_resource.virtualenv}/bin/sentry --config=#{new_resource.config} run_gunicorn -b #{new_resource.host}:#{new_resource.port} -w #{new_resource.workers}"
     environment "DJANGO_CONF" => new_resource.config
     user new_resource.user
-    action :start
+    action :enable
   end
 end
