@@ -17,7 +17,7 @@ end
 define :sentry_conf,
        :name => nil,
        :template => "sentry/sentry.conf.erb",
-       :virtualenv_dir => nil,
+       :virtualenv => nil,
        :user => "sentry",
        :group => "sentry",
        :config => nil,
@@ -31,11 +31,10 @@ define :sentry_conf,
   include_recipe "python::pip"
   include_recipe "sentry::default"
 
-  virtualenv_dir = params[:virtualenv_dir] or node["sentry"]["virtulenv"]
-
+  virtualenv_dir = params[:virtualenv] or node["sentry"]["virtualenv"]
   #settings_variables = Chef::Mixin::DeepMerge.deep_merge!(node[:sentry][:settings].to_hash, params[:settings])
-
   node.default["settings_variables"] = params[:settings]
+
   config = params[:config] || node["sentry"]["config"]
   node.default["settings_variables"]["config"] = config
 
