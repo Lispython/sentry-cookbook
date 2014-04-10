@@ -26,4 +26,10 @@ server {
      proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
      proxy_set_header   X-Forwarded-Proto $scheme;
   }
+
+  location /_static {
+     alias <%= node["sentry"]["static_dir"] %>;
+            expires 14d;
+            access_log off;
+        }
 }

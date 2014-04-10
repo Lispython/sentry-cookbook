@@ -20,6 +20,7 @@ default["sentry"]["virtualenv"] = "/var/www/sentry"
 default["sentry"]["userhome"] = node["sentry"]["virtualenv"]
 default["sentry"]["config"] = "/etc/sentry.conf.py"
 default["sentry"]["superusers"] = []
+default["sentry"]["static_dir"] = "#{node["sentry"]["userhome"]}/static"
 
 # Sentry config settings
 default["sentry"]["settings"] = {}

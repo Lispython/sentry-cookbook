@@ -13,6 +13,15 @@ include_recipe "sentry::default"
 Chef::Log.info("Making nginx frontend for sentry service")
 
 
+ruby_block "setup-static-dir" do
+  block do
+    path = `#{node["sentry"]["virtualenv"]}/bin/python -c "import sentry, os; print(os.path.dirname(sentry.__file__));"`
+    node["sentry"]["static_dir"] = "#{path.strip()}/static/"
+  end
+  action :create
+end
+
+
 template "#{node[:nginx][:dir]}/sites-available/sentry.conf" do
   source 'nginx.conf.erb'
   owner user
