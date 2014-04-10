@@ -17,7 +17,7 @@ end
 define :sentry_conf,
        :name => nil,
        :template => "sentry/sentry.conf.erb",
-       :virtualenv_dir => nil,
+       :virtualenv => nil,
        :user => "sentry",
        :group => "sentry",
        :config => nil,
@@ -31,13 +31,12 @@ define :sentry_conf,
   include_recipe "python::pip"
   include_recipe "sentry::default"
 
-  virtualenv_dir = params[:virtualenv_dir] or node["sentry"]["virtulenv"]
-
+  virtualenv_dir = params[:virtualenv] or node["sentry"]["virtualenv"]
   #settings_variables = Chef::Mixin::DeepMerge.deep_merge!(node[:sentry][:settings].to_hash, params[:settings])
+  node.default["settings_variables"] = params[:settings]
 
-  settings_variables = params[:settings]
   config = params[:config] || node["sentry"]["config"]
-  settings_variables["config"] = config
+  node.default["settings_variables"]["config"] = config
 
   Chef::Log.info("Making directory for virtualenv: #{virtualenv_dir}")
   # Making application virtualenv directory
@@ -64,7 +63,7 @@ define :sentry_conf,
     group params[:group]
     source params[:template]
     mode 0777
-    variables(settings_variables.to_hash)
+    variables(node["settings_variables"].to_hash)
     cookbook params[:templates_cookbook]
   end
 
@@ -84,7 +83,12 @@ define :sentry_conf,
     if db_options['ENGINE'] == 'django.db.backends.postgresql_psycopg2'
       driver_name = 'psycopg2'
     elsif db_options['ENGINE'] == 'django.db.backends.mysql'
-      driver_name = 'MySQLdb'
+      if node['platform'] == 'ubuntu'
+        package "libmysqlclient-dev" # mysql-python requires this package to be installed
+        driver_name = 'mysql-python'
+      else
+        driver_name = 'MySQLdb'
+      end
     elsif db_options['ENGINE'] == 'django.db.backends.oracle'
       driver_name = 'cx_Oracle'
     else
