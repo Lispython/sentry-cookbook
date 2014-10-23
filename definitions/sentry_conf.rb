@@ -31,7 +31,7 @@ define :sentry_conf,
   include_recipe "python::pip"
   include_recipe "sentry::default"
 
-  virtualenv_dir = params[:virtualenv] or node["sentry"]["virtualenv"]
+  virtualenv_dir = params[:virtualenv] || node["sentry"]["virtualenv"]
   #settings_variables = Chef::Mixin::DeepMerge.deep_merge!(node[:sentry][:settings].to_hash, params[:settings])
   node.default["settings_variables"] = params[:settings]
 
