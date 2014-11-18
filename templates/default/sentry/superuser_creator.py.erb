@@ -7,11 +7,13 @@ from logan.runner import configure_app
 configure_app(config_path="<%= @config %>",
               project="sentry", default_settings="sentry.conf.server")
 
-from django.contrib.auth import get_user_model
+try:
+    from django.contrib.auth import get_user_model
+except ImportError:  # for Django < 1.5
+    from django.contrib.auth.models import User
+else:
+    User = get_user_model()  # Get actual user model
 
-
-# Get actual user model
-User = get_user_model()
 
 users = [
     <% for  @user in @superusers %>
