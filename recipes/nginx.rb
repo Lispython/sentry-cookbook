@@ -16,7 +16,7 @@ Chef::Log.info("Making nginx frontend for sentry service")
 ruby_block "setup-static-dir" do
   block do
     path = `#{node["sentry"]["virtualenv"]}/bin/python -c "import sentry, os; print(os.path.dirname(sentry.__file__));"`
-    node["sentry"]["static_dir"] = "#{path.strip()}/static/"
+    node.set["sentry"]["static_dir"] = "#{path.strip()}/static/"
   end
   action :create
 end

@@ -69,7 +69,7 @@ EXTRA_INSTALLED_APPS = [
 <% end %>
 <% for item in @third_party_plugins %>
    <% if item['name'] %>
-   '<%= item %>',
+   '<%= item['name'] %>',
    <% end %>
 <% end %>
 ]

@@ -31,7 +31,7 @@ define :sentry_conf,
   include_recipe "python::pip"
   include_recipe "sentry::default"
 
-  virtualenv_dir = params[:virtualenv] or node["sentry"]["virtualenv"]
+  virtualenv_dir = params[:virtualenv] || node["sentry"]["virtualenv"]
   #settings_variables = Chef::Mixin::DeepMerge.deep_merge!(node[:sentry][:settings].to_hash, params[:settings])
   node.default["settings_variables"] = params[:settings]
 
@@ -91,6 +91,8 @@ define :sentry_conf,
       end
     elsif db_options['ENGINE'] == 'django.db.backends.oracle'
       driver_name = 'cx_Oracle'
+    elsif db_options['ENGINE'] == 'django.db.backends.sqlite3'  # default handler
+      driver_name = 'pysqlite'
     else
       raise "You need specify database ENGINE"
     end
