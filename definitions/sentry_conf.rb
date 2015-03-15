@@ -38,6 +38,10 @@ define :sentry_conf,
   config = params[:config] || node["sentry"]["config"]
   node.default["settings_variables"]["config"] = config
 
+  if node["sentry"]["use_queue"]
+    node.set["settings_variables"]["use_queue"] = true
+  end
+
   Chef::Log.info("Making directory for virtualenv: #{virtualenv_dir}")
   # Making application virtualenv directory
   directory virtualenv_dir do
@@ -68,6 +72,7 @@ define :sentry_conf,
   end
 
   # Intstall sentry via pip
+  Chef::Log.info("Install sentry version #{node["sentry"]["version"]}")
   python_pip "sentry" do
     provider Chef::Provider::PythonPip
     user params[:user]
@@ -140,6 +145,22 @@ define :sentry_conf,
   #{virtualenv_dir}/bin/python #{virtualenv_dir}/bin/sentry --config=#{config} upgrade --noinput &&
   deactivate
   EOH
+  end
+
+
+  if node['sentry']['cleanup']['on']
+    Chef::Log.info("Making sentry config for cleanup #{node['sentry']['cleanup']['days']}")
+
+    cron_d "cleanup" do
+      hour node["sentry"]["cleanup"]["time"]["hour"]
+      minute node["sentry"]["cleanup"]["time"]["minute"]
+      day node["sentry"]["cleanup"]["time"]["day"]
+      month node["sentry"]["cleanup"]["time"]["month"]
+      weekday node["sentry"]["cleanup"]["time"]["weekday"]
+      user params[:user]
+
+      command ". #{virtualenv_dir}/bin/activate && #{virtualenv_dir}/bin/python #{virtualenv_dir}/bin/sentry --config=#{config} cleanup --days=#{node['sentry']['cleanup']['days']} && deactivate"
+    end
   end
 
   # # Create superusers

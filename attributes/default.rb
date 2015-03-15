@@ -22,6 +22,7 @@ default["sentry"]["config"] = "/etc/sentry.conf.py"
 default["sentry"]["superusers"] = []
 default["sentry"]["static_dir"] = "#{node["sentry"]["userhome"]}/static"
 
+default["sentry"]["use_queue"] = false
 # Sentry config settings
 default["sentry"]["settings"] = {}
 
@@ -114,7 +115,8 @@ default["sentry"]["gunicorn"] = true
 default["sentry"]["nginx"] = {
   "domain" => "localhost",
   "ip_address" => "0.0.0.0",
-  "port" => 80
+  "port" => 80,
+  "ip_as_server_name" => false
 }
 
 default["sentry"]["supervisor"] = "sentry_base"
@@ -123,3 +125,21 @@ default["sentry"]["servers"] = [{
                                   "host" => "0.0.0.0",
                                   "port" => 9000
                                 }]
+
+
+
+default["sentry"]["settings"]["redis"]["hosts"] = {
+  "0" => {
+    "HOST" => "127.0.0.1",
+    "PORT" => 6379
+  }}
+
+
+default["sentry"]["settings"]["tsdb"] = 'sentry.tsdb.redis.RedisTSDB'
+default["sentry"]["settings"]["use_buffers"] = false
+default["sentry"]["cleanup"]["on"] = true
+default["sentry"]["cleanup"]["days"] = 30
+default["sentry"]["cleanup"]["time"] = {
+  "hour" => "*/12",
+  "minute" => "10"
+}

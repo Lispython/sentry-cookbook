@@ -8,7 +8,8 @@ upstream sentry_backends  {
 server {
   listen <%= node["sentry"]["nginx"]["ip_address"] %>:<%= node["sentry"]["nginx"]["port"] %>;
 
-  server_name <%= node["sentry"]["nginx"]["domain"] %>;
+  server_name <%= node["sentry"]["nginx"]["domain"] %> <% if node["sentry"]["nginx"]["ip_as_server_name"] %><%= node["sentry"]["nginx"]["ip_address"] %><% end %>;
+
 
   error_log /var/log/nginx/sentry.error.log;
   access_log /var/log/nginx/sentry.access.log;

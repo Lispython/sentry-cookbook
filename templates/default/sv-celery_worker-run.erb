@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+TARGET_USER=<%= @options[:user] %>
+CONFIG_FILE=<%= @options[:config] %>
+
+. <%= @options[:virtualenv] %>/bin/activate
+
+exec chpst -u $TARGET_USER sentry --config=$CONFIG_FILE celery worker -B -l WARNING 2>&1

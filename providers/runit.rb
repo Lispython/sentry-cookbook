@@ -7,7 +7,8 @@ action :init do
 
   runit_service sentry_new_resource.name do
     template_name "sentry"
-    run_restart false
+    log_template_name "sentry"
+    action [:enable, :restart]
     options(:user => sentry_new_resource.user,
             :group => sentry_new_resource.group,
             :service_name => sentry_new_resource.name,
@@ -18,4 +19,6 @@ action :init do
             :virtualenv => sentry_new_resource.virtualenv,
             :log_folder => log_folder)
   end
+
+
 end
