@@ -81,7 +81,7 @@ EXTRA_ALLOWED_HOSTS = ['*']
 
 SENTRY_REDIS_OPTIONS = {
   "hosts": {
-  <% for host, hostsettings in @redis[:hosts] %>
+  <% for host, hostsettings in @redis['hosts'] %>
   <%= host %>: {
        <% for key, value in hostsettings %>
        "<%= key %>": <% if value.is_a?(Integer) %><%= value %><% else %>"<%= value %>"<% end %>,
@@ -101,7 +101,7 @@ SENTRY_TSDB_OPTIONS = {
 <% end %>
 
 
-<% if @use_queue and @redis[:hosts] %>
+<% if @use_queue and @redis['hosts'] %>
 REDIS_DB = SENTRY_REDIS_OPTIONS['hosts'].keys()[0]
 REDIS_DB_CONF = SENTRY_REDIS_OPTIONS['hosts'][REDIS_DB]
 BROKER_URL = "redis://{0}:{1}/{2}".format(REDIS_DB_CONF['HOST'], REDIS_DB_CONF['PORT'], REDIS_DB)
@@ -110,7 +110,7 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
 <% end %>
 
-<% if @use_buffers and @redis[:hosts] %>
+<% if @use_buffers and @redis['hosts'] %>
 SENTRY_BUFFER = 'sentry.buffer.redis.RedisBuffer'
 
 SENTRY_BUFFER_OPTIONS = {
