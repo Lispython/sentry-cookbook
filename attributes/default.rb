@@ -63,6 +63,7 @@ default["sentry"]["settings"]["social_auth_create_users"] = 'True'
 
 # Email settings
 default["sentry"]["settings"]["email"] = {
+  "from" => '',
   "backend" => 'django.core.mail.backends.smtp.EmailBackend',
   "host" => "localhost",
   "password" => '',
